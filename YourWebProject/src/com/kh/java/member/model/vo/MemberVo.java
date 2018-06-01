@@ -12,7 +12,8 @@ public class MemberVo {
 	private String email;
 	private String phone;
 	private String address;
-	private List<String> hobby;
+	//private List<String> hobby;
+	private String hobbies;
 	private Date enrolldate;
 	
 	public MemberVo(){
@@ -20,7 +21,7 @@ public class MemberVo {
 	}
 
 	public MemberVo(String userid, String password, String username, char gender, int age, String email, String phone,
-			String address, List<String> hobby, Date enrolldate) {
+			String address, /*List<String> hobby*/String hobbies , Date enrolldate) {
 		super();
 		this.userid = userid;
 		this.password = password;
@@ -30,7 +31,8 @@ public class MemberVo {
 		this.email = email;
 		this.phone = phone;
 		this.address = address;
-		this.hobby = hobby;
+		//this.hobby = hobby;
+		this.hobbies = hobbies;
 		this.enrolldate = enrolldate;
 	}	
 	
@@ -71,9 +73,14 @@ public class MemberVo {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+	/*
 	public void setHobby(List<String> hobby) {
 		this.hobby = hobby;
+	}
+	*/
+	
+	public void setHobbies(String hobbies){
+		this.hobbies = hobbies;
 	}
 
 	public void setEnrolldate(Date enrolldate) {
@@ -112,8 +119,14 @@ public class MemberVo {
 		return address;
 	}
 
+	/*
 	public List<String> getHobby() {
 		return hobby;
+	}
+	*/
+	
+	public String getHobbies(){
+		return hobbies;
 	}
 
 	public Date getEnrolldate() {

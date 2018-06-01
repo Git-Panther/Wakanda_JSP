@@ -11,4 +11,8 @@ public class MemberService {
 	public MemberVo signin(String id, String pw){
 		return new MemberDao().signin(id, pw); // 접근하고 가져온다.
 	}
+	
+	public int signupMember(MemberVo m){
+		return new MemberDao().insertMember(m);
+	}
 }

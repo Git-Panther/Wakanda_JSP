@@ -1,10 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="com.kh.java.member.model.vo.MemberVo"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%
+	String msg1 = (String)request.getAttribute("msg1");
+	String msg2 = (String)request.getAttribute("msg2");
+%>
 <html>
 <head>
 <meta charset="UTF-8">
-<title></title>
+<title>Sign in</title>
 <script
   src="https://code.jquery.com/jquery-3.3.1.js"
   integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -20,15 +24,20 @@
 <script type="text/javascript" src="/uwp/js/jquery-3.3.1.min.js"></script>
 <style>
 	body{
-		background:url("/uwp/images/Asian_Games_2018_small.jpg") no-repeat center;
+		background:url("/uwp/images/asiangames2018_lol.jpg") no-repeat center;
 		backgroun-size:cover;
 	}
 	
-	.signinArea > #signinForm, .userInfo{
+	.signinArea > #signinForm{
 		float:right;
 	}
 	
-	#signinBtn, #signupBtn , #modifyInfoBtn, #signoutBtn{
+	.signinArea td{
+		color:white;
+		font-weight:bold;
+	}
+	
+	#signinBtn, #signupBtn{
 		display:inline-block;
 		vertical-align:middle;
 		text-align:center;
@@ -38,49 +47,22 @@
 		border-radius:5px;
 		background:orangered;
 		color:white;
+	}
+	
+	.outer{
+		width:600px;
+		height:500px;
+		vertical-align:middle;
+		margin-left:auto;
+		margin-right:auto;
+		padding:20px;
+		border:1px solid white;
+	}
+	
+	.outer > h1{
+		color:red;
 		font-weight:bold;
-	}
-	
-	.tile{
-		width:150px;
-		height:150px;
-		background:black;
-		display:inline-block;
-	}
-	
-	.first-line{
-		margin-top:10%;
-	}
-	
-	.tile-menu:hover{
-		background:skyblue;
-		cursor:pointer;
-		color:white;
-	}
-	
-	.notile{
-		visibility:hidden;
-	}
-	
-	.tile1{
-		background:gray;
-	}
-	
-	.footer{
-		position:fixed;
-		left:0;
-		bottom:0;
-		background:brown;
-		color:white;
 		text-align:center;
-		width:100%;
-	}
-	
-	.userInfo{
-		font-weight:bold;
-		font-size:20px;
-		color:blue;
-		
 	}
 </style>
 <script>
@@ -88,26 +70,16 @@
 		$("#signinForm").submit();
 	}
 	
-	function signout(){
-		location.href = "/uwp/signout.do";
-	}
-	
-	function goSignup(){
+	function signup(){
 		location.href = "/uwp/views/member/signup.jsp";
 	}
-	
-	function myInfo(){
-		location.href = "/uwp/views/member/myInfo.jsp";
-	}
 </script>
-<%
-	MemberVo member = (MemberVo)request.getSession().getAttribute("user"); // Object 반환이라 Type Casting
-%>
 </head>
 <body>
-	<h1 align="center">Welcome to the Web Project!</h1>	
-	<div class="signinArea">
-		<%if(member == null){%>
+	<%@ include file="menu.jsp" %>
+	<div class="outer">
+		<h1><%=msg1%><br><%=msg2%></h1>
+		<div class="signinArea">
 			<form id="signinForm" action="signin.do" method="post">
 				<table>
 					<tr>
@@ -121,26 +93,12 @@
 					<tr>
 						<td colspan="2"><!-- form 내 button은 submit 취급 -->
 							<div id="signinBtn" onclick="signin();">Sign in</div> 
-							<div id="goSignupBtn" onclick="goSignup();">Sign up</div>
+							<div id="signupBtn" onclick="signup();">Sign up</div>
 						</td>
 					</tr>
 				</table>
 			</form>
-		<%}else{%>
-			<div class="userInfo">
-				<table>
-					<tr>
-						<td><p><%=member.getUsername()%>, Welcome to the Web Project.</p></td>
-					</tr>
-					<tr>
-						<td>
-							<div id="modifyInfoBtn" onclick="myInfo();">Edit Info</div>
-							<div id="signoutBtn" onclick="signout();">Sign out</div>
-						</td>
-					</tr>
-				</table>		
-			</div>
-		<%}%>
-	</div>
+		</div>
+	</div>	
 </body>
 </html>

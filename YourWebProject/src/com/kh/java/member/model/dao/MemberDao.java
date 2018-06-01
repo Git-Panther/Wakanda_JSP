@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.kh.java.common.JDBCTemplate;
 import com.kh.java.member.model.vo.MemberVo;
 
 public class MemberDao {
@@ -15,13 +16,12 @@ public class MemberDao {
 	
 	public MemberVo signin(String id, String pw){
 		MemberVo result = null;
-		Connection con = null; // connection 생성
+		Connection conn = JDBCTemplate.getConnection(); // connection 생성
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver"); // 실행할 jdbc 라이브러리 등록. 가끔씩 Build Path에서 인식을 못하는데, 이러면 lib에 넣어줘서 컴파일한다.
-			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "jsp", "jsp");
-			stmt = con.createStatement();
+			stmt = conn.createStatement();
 
 			String query = "SELECT * "
 					+ "FROM MEMBER " // 주의 : 쿼리를 여러 줄에 걸쳐 쓸거면 마지막 전까지는 줄이 끝나는 곳엔 항상 뒤에 띄어쓰기 등으로 구분해줘야 한다.
@@ -47,7 +47,47 @@ public class MemberDao {
 			try {
 				rs.close();
 				stmt.close();
-				con.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+		
+		return result;
+	}
+
+	public int insertMember(MemberVo m) {
+		// TODO Auto-generated method stub
+		int result = 0;
+		Connection conn = JDBCTemplate.getConnection(); // connection 생성
+		Statement stmt = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver"); // 실행할 jdbc 라이브러리 등록. 가끔씩 Build Path에서 인식을 못하는데, 이러면 lib에 넣어줘서 컴파일한다.
+			stmt = conn.createStatement();
+			String query = "INSERT INTO MEMBER " // 주의 : 쿼리를 여러 줄에 걸쳐 쓸거면 마지막 전까지는 줄이 끝나는 곳엔 항상 뒤에 띄어쓰기 등으로 구분해줘야 한다.
+					+ "VALUES('" + m.getUserid()
+					+ "', '" + m.getPassword()
+					+ "', '" + m.getUsername()
+					+ "', '" + m.getGender()
+					+ "', " + m.getAge()
+					+ ", '" + m.getEmail()
+					+ "', '" + m.getPhone()
+					+ "', '" + m.getAddress()
+					+ "', '" + m.getHobbies()
+					+ "', " + "SYSDATE); COMMIT"; // 문자형 비교이면 변수 앞뒤로 따옴표 붙여줘야 한다. 그리고 맨 마지막에 ;는 붙이지 않는다.
+			result = stmt.executeUpdate(query); // SQL 실행하여 표 형식으로 반환
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// 열었던 것들을 닫아준다. 나중에 연 것부터 닫아준다.
+			try {
+				stmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

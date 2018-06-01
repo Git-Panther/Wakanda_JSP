@@ -8,6 +8,7 @@
 </head>
 <body>
 	<%@ include file="views/common/header.jsp" %>
+	<%@ include file="views/common/menu.jsp" %>
 	<div class="background" align="center">
 		<div class="first-line">
 			<div class="tile tile-menu"></div>

@@ -1,8 +1,8 @@
 package com.kh.java.member.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,23 +40,17 @@ public class SignInServlet extends HttpServlet {
 		String pw = request.getParameter("userpw");
 		
 		MemberVo member = new MemberService().signin(id, pw);
-		PrintWriter out = response.getWriter();
-		out.println("<html>");
-		out.println("<head><title>Loading...</title>");	
+
 		if(member != null){
 			HttpSession session = request.getSession();
 			session.setAttribute("user", member);
+			response.sendRedirect("index.jsp");	
 		} else {
-			out.println("<script type='text/javascript' src='/uwp/js/jquery-3.3.1.min.js'></script>");
-			out.println("<script>$(function(){alert('Check again your id or password.');});</script>");		
+			// 다시 로그인하라는 페이지로 이동한다.
+			request.setAttribute("msg1", "Invalid ID or password.");
+			request.setAttribute("msg2", "Please check them again.");
+			RequestDispatcher rd = request.getRequestDispatcher("views/common/signin.jsp");
+			rd.forward(request, response);
 		}
-		out.println("</head>");
-		out.println("<body>");
-		out.println("</body>");
-		out.println("</html>");
-		out.flush();
-		response.sendRedirect("index.jsp");
-		out.close();
 	}
-
 }
