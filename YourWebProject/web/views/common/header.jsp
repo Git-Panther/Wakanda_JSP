@@ -28,7 +28,7 @@
 		float:right;
 	}
 	
-	#signinBtn, #signupBtn , #modifyInfoBtn, #signoutBtn{
+	#signinBtn, #goSignupBtn , #modifyInfoBtn, #signoutBtn{
 		display:inline-block;
 		vertical-align:middle;
 		text-align:center;

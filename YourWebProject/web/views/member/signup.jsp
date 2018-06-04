@@ -3,6 +3,10 @@
 <!DOCTYPE html>
 <%@ include file="../common/header.jsp" %>
 <%@ include file="../common/menu.jsp" %>
+<%
+	String msg = (String)request.getAttribute("msg"); 
+	String id = null;
+%>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -60,46 +64,78 @@
 		color:blue;
 		cursor:pointer;
 	}
+	
+	h3 .warning{
+		align:center;
+		color:red;
+	}
 </style>
 <script>
 	function validate(){
-		if($("#userpw").val() != $("userpwc").val()){
-			$("#pwCheckSpan").text("Invalid Password. Write the password to check.");
+		if($("#userpw").val().length < 1 || $("#userpw").val() != $("#userpwc").val()){
+			alert("Password Wrong!");
+			$("#userpwc").val("").focus();
 			return false;
-		}
-		
-		return true;
+		} else if(!($("#male").prop("checked")) && !($("#female").prop("checked"))){
+			alert("Sex Wrong!");
+			return false;
+		} else{
+			return true;
+		}	
 	}
 	
-	$(function(){
+	function checkPassword(){ // 비밀번호 입력했는지 체크
+		if($("#userpw").val().length >= 1) {
+			if($("#userpw").val() != $("#userpwc").val()){
+				$("#pwCheckSpan").text("Invalid Password.");
+			} else {
+				$("#pwCheckSpan").text("Correct Password.");
+			}	
+		} else{
+			$("#pwCheckSpan").text("");
+		}
+	}
+	
+	$(function(){	
 		$("#userpw").keyup(function(){
-			if($("userpwc").val().length >= 1) {
-				if($("#userpw").val() != $("userpwc").val()){
-					$("#pwCheckSpan").text("Invalid Password. Write the password to check.");
-				} else {
-					$("#pwCheckSpan").text("PASS");
-				}	
-			}		
+			checkPassword();
 		});
 		
 		$("#userpwc").keyup(function(){
-			if($("#userpw").val() != $("userpwc").val()){
-				$("#pwCheckSpan").text("Invalid Password. Write the password to check.");
-			} else {
-				$("#pwCheckSpan").text("PASS");
-			}
+			checkPassword();
 		});
 	});
 	
 	function signup(){
-		$("form").onsubmit();
+		$("#signupForm").submit();
+	}
+	
+	function goMain(){
+		location.href = "/uwp/index.jsp";
+	}
+	
+	function checkId(){
+		alert("준비중");
+	}
+	
+	function searchZipCode(){
+		
+	}
+	
+	function searchAddr(){
+		
 	}
 </script>
 </head>
 <body>
 	<div class="outer">
 		<h2 align="center">Sign up</h2>
-		<form method="post" action="/signup.do" onsubmit="validate();">
+		<%if(msg != null && msg.equals("Failed")){%>
+			<br>
+			<br>
+			<h3 class="warning">Sign up has failed. Try again.</h3>	
+		<%}%>
+		<form id="signupForm" method="post" action="/signup.do" onsubmit="return validate();">
 			<table>
 				<tr>
 					<td><span class="import"></span>ID : </td>
@@ -136,8 +172,16 @@
 				</tr>
 				<tr>
 					<td><span class="import"></span>Email : </td>
-					<td><input type="email" name="email"></td>
-					<td><div class="searchBtn" id="emailBtn" onclick="searchEmail();">Search</div></td>
+					<td>
+						<input type="email" name="email">
+						@
+						<select name="domain" id="domain">
+							<option>naver.com</option>
+							<option>hanmail.net</option>
+							<option>gmail.com</option>
+						</select>
+					</td>
+					<td></td>
 				</tr>
 				<tr>
 					<td><span class="import"></span>Cell Phone : </td>

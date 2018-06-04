@@ -1,7 +1,9 @@
 package com.kh.java.member.controller;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,26 +41,37 @@ public class SignUpServlet extends HttpServlet {
 		String name = request.getParameter("username");
 		char gender = request.getParameter("gender").charAt(0);
 		int age = Integer.parseInt(request.getParameter("age"));
-		String email = request.getParameter("email");
-		String phone = request.getParameter("phone1") + request.getParameter("phone2") + request.getParameter("phone3");
+		String email = request.getParameter("email") + "@" + request.getParameter("domain");
+		String phone = request.getParameter("phone1")
+				+ "-" + request.getParameter("phone2")
+				+ "-" + request.getParameter("phone3");
 		String zipcode = request.getParameter("zipcode");
 		String address = request.getParameter("address1") + " / " + request.getParameter("address2");
 		String fullAddr = address + "|" + zipcode;
 		String[] hobbies = request.getParameterValues("hobby");
-		/*
-		LinkedList<String> allHobby = new LinkedList<>();
-		for(String hobby : hobbies){
-			allHobby.add(hobby);
-		}
-		*/
-		StringBuilder allHobby = new StringBuilder();
-		for(int index = 0; index < hobbies.length; index++){
-			allHobby.append(hobbies[index]);
-			if(index != hobbies.length - 1) allHobby.append("|");
-		}
-		
+		LinkedList<String> allHobby = null;
+		if(hobbies != null){
+			allHobby = new LinkedList<>();
+			for(String hobby : hobbies){
+				allHobby.add(hobby);
+			}	
+		}		
 		MemberService ms = new MemberService();
-		int result = ms.signupMember(new MemberVo(id, pw, name, gender, age, email, phone, fullAddr, allHobby.toString(), null));
+		if(ms.getMemberById(id) != null){ // id가 존재하므로 안됨
+			System.out.println("Duplicate");
+		} else {
+			
+		}
+		int result = ms.signupMember(new MemberVo(id, pw, name, gender, age, email, phone, fullAddr, allHobby, null));
+		if(result == 0){
+			System.out.println("failed.");
+			request.setAttribute("msg", "Failed");
+			RequestDispatcher view = request.getRequestDispatcher("views/member/signup.jsp");
+			view.forward(request, response);
+		}else{
+			System.out.println(result + " has been success.");
+			response.sendRedirect("index.jsp");
+		}
 	}
 
 }

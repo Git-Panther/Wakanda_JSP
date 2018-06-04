@@ -15,4 +15,9 @@ public class MemberService {
 	public int signupMember(MemberVo m){
 		return new MemberDao().insertMember(m);
 	}
+
+	public MemberVo getMemberById(String id) {
+		// TODO Auto-generated method stub
+		return new MemberDao().selectMemberById(id);
+	}
 }
