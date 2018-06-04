@@ -24,7 +24,7 @@
 <script type="text/javascript" src="/uwp/js/jquery-3.3.1.min.js"></script>
 <style>
 	body{
-		background:url("/uwp/images/asiangames2018_lol.jpg") no-repeat center;
+		background:url("/uwp/images/Asian_Games_2018_LOL.jpg") no-repeat center;
 		backgroun-size:cover;
 	}
 	

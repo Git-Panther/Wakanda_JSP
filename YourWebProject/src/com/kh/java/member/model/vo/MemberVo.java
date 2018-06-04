@@ -125,7 +125,7 @@ public class MemberVo {
 			for(int index = 0; index < hobby.size(); index++){
 				allHobby.append(hobby.get(index));
 				if(index != hobby.size() - 1)
-					allHobby.append("|");
+					allHobby.append(", ");
 			}		
 			return allHobby.toString();
 		}

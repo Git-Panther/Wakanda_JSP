@@ -46,8 +46,8 @@ public class SignUpServlet extends HttpServlet {
 				+ "-" + request.getParameter("phone2")
 				+ "-" + request.getParameter("phone3");
 		String zipcode = request.getParameter("zipcode");
-		String address = request.getParameter("address1") + " / " + request.getParameter("address2");
-		String fullAddr = address + "|" + zipcode;
+		String address =  zipcode + ", " + request.getParameter("address1") + ", " + request.getParameter("address2");
+		String fullAddr = address;
 		String[] hobbies = request.getParameterValues("hobby");
 		LinkedList<String> allHobby = null;
 		if(hobbies != null){

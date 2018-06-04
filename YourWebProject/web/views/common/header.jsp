@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.kh.java.member.model.vo.MemberVo"%>
+<%
+	MemberVo member = (MemberVo)request.getSession().getAttribute("user"); // Object 반환이라 Type Casting
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +31,7 @@
 		float:right;
 	}
 	
-	#signinBtn, #goSignupBtn , #modifyInfoBtn, #signoutBtn{
+	#signinBtn, #gotoSignupBtn , #gotoEditInfoBtn, #signoutBtn{
 		display:inline-block;
 		vertical-align:middle;
 		text-align:center;
@@ -92,23 +95,20 @@
 		location.href = "/uwp/signout.do";
 	}
 	
-	function goSignup(){
+	function gotoSignup(){
 		location.href = "/uwp/views/member/signup.jsp";
 	}
 	
-	function myInfo(){
-		location.href = "/uwp/views/member/myInfo.jsp";
+	function gotoEditInfo(){
+		location.href = "/uwp/views/member/editMyInfo.jsp";
 	}
 </script>
-<%
-	MemberVo member = (MemberVo)request.getSession().getAttribute("user"); // Object 반환이라 Type Casting
-%>
 </head>
 <body>
 	<h1 align="center">Welcome to the Web Project!</h1>	
 	<div class="signinArea">
 		<%if(member == null){%>
-			<form id="signinForm" action="signin.do" method="post">
+			<form id="signinForm" action="/uwp/signin.do" method="post">
 				<table>
 					<tr>
 						<td>ID : </td>
@@ -121,7 +121,7 @@
 					<tr>
 						<td colspan="2"><!-- form 내 button은 submit 취급 -->
 							<div id="signinBtn" onclick="signin();">Sign in</div> 
-							<div id="goSignupBtn" onclick="goSignup();">Sign up</div>
+							<div id="gotoSignupBtn" onclick="gotoSignup();">Sign up</div>
 						</td>
 					</tr>
 				</table>
@@ -134,7 +134,7 @@
 					</tr>
 					<tr>
 						<td>
-							<div id="modifyInfoBtn" onclick="myInfo();">Edit Info</div>
+							<div id="gotoEditInfoBtn" onclick="gotoEditInfo();">Edit Info</div>
 							<div id="signoutBtn" onclick="signout();">Sign out</div>
 						</td>
 					</tr>

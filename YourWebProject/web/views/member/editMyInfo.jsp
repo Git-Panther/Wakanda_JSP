@@ -1,79 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <%@ include file="../common/header.jsp" %>
 <%@ include file="../common/menu.jsp" %>
-<%
-	String msg = (String)request.getAttribute("msg"); 
-%>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Sign Up</title>
-<style>
-	body{
-		background:url("/uwp/images/Asian_Games_2018_LOL.jpg") no-repeat center;
-		backgroun-size:cover;
-	}
-	
-	.signinArea > #signinForm{
-		float:right;
-	}
-	
-	.signinArea td{
-		color:white;
-		font-weight:bold;
-	}
-	
-	.btns div{
-		display:inline-block;
-		vertical-align:middle;
-		text-align:center;
-		cursor:pointer;
-		width:103px;
-		height:25px;
-		border-radius:5px;
-		background:orangered;
-		color:white;
-		font-weight:bold;
-	}
-	
-	.outer{
-		width:600px;
-		height:500px;
-		vertical-align:middle;
-		margin-left:auto;
-		margin-right:auto;
-		padding:20px;
-		border:1px solid white;
-	}
-	
-	.outer > h1{
-		color:red;
-		font-weight:bold;
-		text-align:center;
-	}
-	
-	.searchBtn{
-		background:skyblue;
-		border-radius:5px;
-		width:100px;
-		height:25px;
-		text-align:center;
-		color:blue;
-		cursor:pointer;
-	}
-	
-	h3 .warning{
-		align:center;
-		color:red;
-	}
-</style>
+<title>Edit My Information</title>
 <!--autoload=false 파라미터를 이용하여 자동으로 로딩되는 것을 막습니다.-->
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js?autoload=false"></script>
 <script>
 	function validate(){
-		if($("#userpw").val().length < 1 || $("#userpw").val() != $("#userpwc").val()){
+		if($("#userpw").val() != $("#userpwc").val()){
 			alert("Password Wrong!");
 			$("#userpwc").val("").focus();
 			return false;
@@ -105,18 +43,45 @@
 		$("#userpwc").keyup(function(){
 			checkPassword();
 		});
+		
+		$("input:radio").each(function(){
+			if($(this).val() == '<%=member.getGender()%>'){
+				$(this).prop("checked", true);
+			}
+		});
+		
+		var phones = '<%=member.getPhone()%>'.split('-');
+		$("input[name^=phone]").each(function(index){
+			$(this).val(phones[index]);
+		});
+		
+		var hobbies = '<%=member.getAllHobby()%>'.split('');
+		$("input[name^=phone]").each(function(index){
+			$(this).val(phones[index]);
+		});
+		
+		var addr = '<%=member.getAddress()%>'.split(', ');
+		$("#zipcode").val(addr[0]);
+		$("#address1").val(addr[1]);
+		$("#address2").val(addr[2]);
+		
+		var email = '<%=member.getEmail()%>'.split('@');
+		$("input:email").val(email[0]);
+		
+		$("#domain option").each(function(index){
+			if($(this).val() == email[1]){
+				$(this).prop("selected", true);
+				break;
+			}
+		});
 	});
 	
-	function signup(){
-		$("#signupForm").submit();
+	function edit(){
+		$("#editForm").submit();
 	}
 	
 	function goMain(){
 		location.href = "/uwp/index.jsp";
-	}
-	
-	function checkId(){
-		alert("준비중");
 	}
 	
 	function searchAddr(){
@@ -163,19 +128,14 @@
 </script>
 </head>
 <body>
-	<div class="outer">
-		<h2 align="center">Sign up</h2>
-		<%if(msg != null && msg.equals("Failed")){%>
-			<br>
-			<br>
-			<h3 class="warning">Sign up has failed. Try again.</h3>	
-		<%}%>
-		<form id="signupForm" method="post" action="/signup.do" onsubmit="return validate();">
+<div class="outer">
+		<h2 align="center">Edit</h2>
+		<form id="editForm" method="post" action="/edit.do" onsubmit="return validate();">
 			<table>
 				<tr>
 					<td><span class="import"></span>ID : </td>
-					<td><input type="text" name="userid" id="userid" required></td>
-					<td><div class="searchBtn" id="idCheckBtn" onclick="checkId();">Check</div></td>
+					<td><%=member.getUserid()%></td>
+					<td></td>
 				</tr>
 				<tr>
 					<td><span class="import"></span>Password : </td>
@@ -189,7 +149,7 @@
 				</tr>
 				<tr>
 					<td><span class="import"></span>Name : </td>
-					<td><input type="text" name="username" id="username" required></td>
+					<td><input type="text" name="username" id="username" value="<%=member.getUsername()%>" required></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -202,7 +162,7 @@
 				</tr>
 				<tr>
 					<td><span class="import"></span>Age : </td>
-					<td><input type="number" name="age" min="0" max="150" required></td>
+					<td><input type="number" name="age" min="0" max="150" value="<%=member.getAge()%>" required></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -266,7 +226,7 @@
 			</table>
 			<div class="btns">
 				<div id="mainBtn" onclick="goMain();">Main</div>
-				<div id="signupBtn" onclick="signup();">Sign up</div>
+				<div id="editBtn" onclick="edit();">Sign up</div>
 			</div>
 		</form>
 	</div>
