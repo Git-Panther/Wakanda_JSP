@@ -34,15 +34,22 @@ public class MemberVo {
 		//this.hobbies = hobbies;
 		this.enrolldate = enrolldate;
 	}	
-	
+	/*
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return userid + " & " + password + " & " + username;
 	}
-
+	*/
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberVo [userid=" + userid + ", password=" + password + ", username=" + username + ", gender=" + gender
+				+ ", age=" + age + ", email=" + email + ", phone=" + phone + ", address=" + address + ", hobby=" + hobby
+				+ ", enrolldate=" + enrolldate + "]";
 	}
 
 	public void setPassword(String password) {
@@ -123,9 +130,11 @@ public class MemberVo {
 		if(hobby != null){
 			StringBuilder allHobby = new StringBuilder();
 			for(int index = 0; index < hobby.size(); index++){
-				allHobby.append(hobby.get(index));
-				if(index != hobby.size() - 1)
-					allHobby.append(", ");
+				if(hobby.get(index) != null){
+					allHobby.append(hobby.get(index));
+					if(index != hobby.size() - 1)
+						allHobby.append(", ");
+				}		
 			}		
 			return allHobby.toString();
 		}

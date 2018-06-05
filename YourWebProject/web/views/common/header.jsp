@@ -31,7 +31,7 @@
 		float:right;
 	}
 	
-	#signinBtn, #gotoSignupBtn , #gotoEditInfoBtn, #signoutBtn{
+	#signinBtn, #gotoSignupBtn , #gotoEditInfoBtn, #signoutBtn, #deleteBtn{
 		display:inline-block;
 		vertical-align:middle;
 		text-align:center;
@@ -102,6 +102,10 @@
 	function gotoEditInfo(){
 		location.href = "/uwp/views/member/editMyInfo.jsp";
 	}
+	
+	function gotoDeleteAccount(){
+		location.href = "/uwp/views/member/deleteAccount.jsp";
+	}
 </script>
 </head>
 <body>
@@ -136,6 +140,7 @@
 						<td>
 							<div id="gotoEditInfoBtn" onclick="gotoEditInfo();">Edit Info</div>
 							<div id="signoutBtn" onclick="signout();">Sign out</div>
+							<div id="deleteBtn" onclick="gotoDeleteAccount();">Delete</div>
 						</td>
 					</tr>
 				</table>		

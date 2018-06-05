@@ -20,9 +20,18 @@
 		float:right;
 	}
 	
-	.signinArea td{
-		color:white;
-		font-weight:bold;
+	#signupForm td{
+		text-align: center;
+	}
+	
+	#signupForm td:NTH-CHILD(3n+1){
+		background-color:rgb(150, 145, 51);
+		border-radius:5px;
+	}
+	
+	.import, label{
+		font-weight: bold;
+		color:black;
 	}
 	
 	.btns div{
@@ -38,6 +47,10 @@
 		font-weight:bold;
 	}
 	
+	.btns{
+		text-align: center;
+	}
+	
 	.outer{
 		width:600px;
 		height:500px;
@@ -48,10 +61,12 @@
 		border:1px solid white;
 	}
 	
-	.outer > h1{
-		color:red;
+	.outer > h2{
+		color:rgb(40, 175, 114);
 		font-weight:bold;
 		text-align:center;
+		background-color:rgb(30, 86, 81);
+		border-radius:5px;
 	}
 	
 	.searchBtn{
@@ -70,15 +85,36 @@
 	}
 </style>
 <!--autoload=false 파라미터를 이용하여 자동으로 로딩되는 것을 막습니다.-->
-<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js?autoload=false"></script>
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <script>
 	function validate(){
-		if($("#userpw").val().length < 1 || $("#userpw").val() != $("#userpwc").val()){
-			alert("Password Wrong!");
+		if($("#userid").val().length < 6){
+			alert("ID Wrong : 6 or more length");
+			return false;
+		} else if($("#userpw").val().length < 1 || $("#userpw").val() != $("#userpwc").val()){
+			alert("Password Wrong : Invalid Password");
 			$("#userpwc").val("").focus();
 			return false;
+		} else if($("#userpw").val() == $("#userid").val()){
+			alert("Password Wrong : ID and Password are sames");
+			return false;
+		} else if($("#username").val().length < 1){
+			alert("Name Wrong : Didn't input");
+			return false;
 		} else if(!($("#male").prop("checked")) && !($("#female").prop("checked"))){
-			alert("Sex Wrong!");
+			alert("Sex Wrong : Didn't choose");
+			return false;
+		} else if($("input[name=age]").val() == ''){
+			alert("Age Wrong : Didn't input");
+			return false;
+		} else if($("input[name=email]").val().length < 1){
+			alert("Email Wrong : Didn't input");
+			return false;
+		} else if($("input[name=phone2]").val().length < 3 || $("input[name=phone3]").val().length < 4){
+			alert("Phone Wrong : 3-3-4 or 3-4-4");
+			return false;
+		} else if($("#zipcode").val().length < 1 || $("#address1").val().length < 1 || $("#address2").val().length < 1){
+			alert("Address Wrong : Didn't input");
 			return false;
 		} else{
 			return true;
@@ -153,7 +189,7 @@
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 $("#zipcode").val(data.zonecode);
-                $("#address").val(fullAddr);
+                $("#address1").val(fullAddr);
 
                 // 커서를 상세주소 필드로 이동한다.
                 $("#address2").focus();
@@ -170,30 +206,30 @@
 			<br>
 			<h3 class="warning">Sign up has failed. Try again.</h3>	
 		<%}%>
-		<form id="signupForm" method="post" action="/signup.do" onsubmit="return validate();">
+		<form id="signupForm" method="post" action="/uwp/signup.do" onsubmit="return validate();">
 			<table>
 				<tr>
-					<td><span class="import"></span>ID : </td>
+					<td><span class="import">ID : </span></td>
 					<td><input type="text" name="userid" id="userid" required></td>
 					<td><div class="searchBtn" id="idCheckBtn" onclick="checkId();">Check</div></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Password : </td>
+					<td><span class="import">Password : </span></td>
 					<td><input type="password" name="userpw" id="userpw" required></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Check Password : </td>
+					<td><span class="import">Check Password : </span></td>
 					<td><input type="password" name="userpwc" id="userpwc" required></td>
 					<td><span id="pwCheckSpan"></span></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Name : </td>
+					<td><span class="import">Name : </span></td>
 					<td><input type="text" name="username" id="username" required></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Gender : </td>
+					<td><span class="import">Gender : </span></td>
 					<td>
 						<input type="radio" name="gender" value="M" id="male"/> <label for="male">Male</label>
 						<input type="radio" name="gender" value="F" id="female"/> <label for="female">Female</label>
@@ -201,12 +237,12 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Age : </td>
+					<td><span class="import">Age : </span></td>
 					<td><input type="number" name="age" min="0" max="150" required></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Email : </td>
+					<td><span class="import">Email : </span></td>
 					<td>
 						<input type="email" name="email">
 						@
@@ -219,7 +255,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Cell Phone : </td>
+					<td><span class="import">Cell Phone : </span></td>
 					<td>
 						<select name="phone1">
 							<option value="010">010</option>
@@ -231,22 +267,22 @@
 					<td><!--<div class="btn" id="phoneBtn" onclick="searchPhone();">Search</div>--></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Address Number : </td>
+					<td><span class="import">Address Number : </span></td>
 					<td><input type="text" name="zipcode" id="zipcode" readonly></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Address : </td>
+					<td><span class="import">Address : </span></td>
 					<td><input type="text" name="address1" id="address1" readonly></td>
 					<td><div class="searchBtn" id="addrBtn" onclick="searchAddr();">Search</div></td>
 				</tr>
 				<tr>
-					<td><span class="import"></span>Detail Address : </td>
+					<td><span class="import">Detail Address : </span></td>
 					<td><input type="text" name="address2" id="address2"></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td>Hobby : </td>
+					<td><span class="import">Hobby : </span></td>
 					<td>
 						<input type="checkbox" id="videogame" name="hobby" value="videogame"/>
 						<label for="videogame">Video Game</label>

@@ -2,21 +2,104 @@
     pageEncoding="UTF-8"%>
 <%@ include file="../common/header.jsp" %>
 <%@ include file="../common/menu.jsp" %>
+<%
+	String msg = (String)request.getAttribute("msg"); 
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Edit My Information</title>
+<!-- css 파일 떼서 수정 요망 -->
+<style>
+	body{
+		background:url("/uwp/images/Asian_Games_2018_LOL.jpg") no-repeat center;
+		backgroun-size:cover;
+	}
+	
+	.signinArea > #signinForm{
+		float:right;
+	}
+	
+	.signinArea td{
+		color:white;
+		font-weight:bold;
+	}
+	
+	.btns div{
+		display:inline-block;
+		vertical-align:middle;
+		text-align:center;
+		cursor:pointer;
+		width:103px;
+		height:25px;
+		border-radius:5px;
+		background:orangered;
+		color:white;
+		font-weight:bold;
+	}
+	
+	.outer{
+		width:600px;
+		height:500px;
+		vertical-align:middle;
+		margin-left:auto;
+		margin-right:auto;
+		padding:20px;
+		border:1px solid white;
+	}
+	
+	.outer > h1{
+		color:red;
+		font-weight:bold;
+		text-align:center;
+	}
+	
+	.searchBtn{
+		background:skyblue;
+		border-radius:5px;
+		width:100px;
+		height:25px;
+		text-align:center;
+		color:blue;
+		cursor:pointer;
+	}
+	
+	h3 .warning{
+		align:center;
+		color:red;
+	}
+</style>
 <!--autoload=false 파라미터를 이용하여 자동으로 로딩되는 것을 막습니다.-->
-<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js?autoload=false"></script>
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <script>
 	function validate(){
-		if($("#userpw").val() != $("#userpwc").val()){
-			alert("Password Wrong!");
+		if(
+				($("#userpw").val().length > 1 || $("#userpwc").val().length > 1) && ($("#userpw").val() != $("#userpwc").val())
+		){
+			alert("Password Wrong : Invalid Password");
 			$("#userpwc").val("").focus();
 			return false;
+		} else if($("#userpw").val() == '<%=member.getUserid()%>'){
+			alert("Password Wrong : ID and Password are sames");
+			return false;
+		} else if($("#username").val().length < 1){
+			alert("Name Wrong : Didn't input");
+			return false;
 		} else if(!($("#male").prop("checked")) && !($("#female").prop("checked"))){
-			alert("Sex Wrong!");
+			alert("Sex Wrong : Didn't choose");
+			return false;
+		} else if($("input[name=age]").val() == ''){
+			alert("Age Wrong : Didn't input");
+			return false;
+		} else if($("input[name=email]").val().length < 1){
+			alert("Email Wrong : Didn't input");
+			return false;
+		} else if($("input[name=phone2]").val().length < 3 || $("input[name=phone3]").val().length < 4){
+			alert("Phone Wrong : 3-3-4 or 3-4-4");
+			return false;
+		} else if($("#zipcode").val().length < 1 || $("#address1").val().length < 1 || $("#address2").val().length < 1){
+			alert("Address Wrong : Didn't input");
 			return false;
 		} else{
 			return true;
@@ -51,14 +134,25 @@
 		});
 		
 		var phones = '<%=member.getPhone()%>'.split('-');
-		$("input[name^=phone]").each(function(index){
-			$(this).val(phones[index]);
+
+		$("input[name=phone1] > option").each(function(){
+			if($(this).val() == phones[0]){
+				$(this).prop("selected", true);
+			}
 		});
 		
-		var hobbies = '<%=member.getAllHobby()%>'.split('');
 		$("input[name^=phone]").each(function(index){
-			$(this).val(phones[index]);
+			$(this).val(phones[index+1]);
 		});
+		
+		var hobbies = '<%=member.getAllHobby()%>'.split(', ');
+		for(var count = 0; count < hobbies.length; count++){
+			$("input[name=hobby]").each(function(index){
+				if($(this).val() == hobbies[count]){
+					$(this).prop("checked", true);
+				}			
+			});
+		}	
 		
 		var addr = '<%=member.getAddress()%>'.split(', ');
 		$("#zipcode").val(addr[0]);
@@ -66,14 +160,22 @@
 		$("#address2").val(addr[2]);
 		
 		var email = '<%=member.getEmail()%>'.split('@');
-		$("input:email").val(email[0]);
+		$("input[name=email]").val(email[0]);
 		
-		$("#domain option").each(function(index){
-			if($(this).val() == email[1]){
+		/*
+		$("#domain > option").each(function(index){
+			if($(this).val() == email[1].value){
 				$(this).prop("selected", true);
 				break;
 			}
 		});
+		*/		
+		var domain = $("#domain > option");
+		for(var index = 0; index < domain.length; index++){
+			if(domain[index].value == email[1]){
+				domain[index].selected = true;
+			}
+		}
 	});
 	
 	function edit(){
@@ -118,7 +220,7 @@
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 $("#zipcode").val(data.zonecode);
-                $("#address").val(fullAddr);
+                $("#address1").val(fullAddr);
 
                 // 커서를 상세주소 필드로 이동한다.
                 $("#address2").focus();
@@ -130,7 +232,12 @@
 <body>
 <div class="outer">
 		<h2 align="center">Edit</h2>
-		<form id="editForm" method="post" action="/edit.do" onsubmit="return validate();">
+		<%if(msg != null && msg.equals("Failed")){%>
+			<br>
+			<br>
+			<h3 class="warning">To Edit your Information has failed. Try again.</h3>	
+		<%}%>
+		<form id="editForm" method="post" action="/uwp/update.do" onsubmit="return validate();">
 			<table>
 				<tr>
 					<td><span class="import"></span>ID : </td>
@@ -225,8 +332,8 @@
 				</tr>
 			</table>
 			<div class="btns">
-				<div id="mainBtn" onclick="goMain();">Main</div>
-				<div id="editBtn" onclick="edit();">Sign up</div>
+				<div id="mainBtn" onclick="goMain();">Cancel</div>
+				<div id="editBtn" onclick="edit();">OK</div>
 			</div>
 		</form>
 	</div>

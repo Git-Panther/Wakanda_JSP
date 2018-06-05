@@ -169,4 +169,85 @@ public class MemberDao {
 		}
 		return result;
 	}
+
+	public int updateMember(MemberVo m) {
+		// TODO Auto-generated method stub
+		int result = 0;
+		// DB 연결 - 쿼리 전송 객체 생성 - 쿼리 작성 - 실행 결과 저장 - 객체 닫기
+		Connection conn = JDBCTemplate.getConnection(); // connection 생성
+		Statement stmt = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver"); // 실행할 jdbc 라이브러리 등록. 가끔씩 Build Path에서 인식을 못하는데, 이러면 lib에 넣어줘서 컴파일한다.
+			stmt = conn.createStatement();
+			String query = "UPDATE MEMBER SET "; // 주의 : 쿼리를 여러 줄에 걸쳐 쓸거면 마지막 전까지는 줄이 끝나는 곳엔 항상 뒤에 띄어쓰기 등으로 구분해줘야 한다.
+			if(m.getPassword()!=null && m.getPassword().length() > 0) query += "PASSWORD = '" + m.getPassword() + "', ";
+			// 비밀번호를 변경했을 때만 반영
+			query += "USERNAME = '" + m.getUsername()
+					+ "', GENDER = '" + m.getGender()
+					+ "', AGE = " + m.getAge()
+					+ ", EMAIL = '" + m.getEmail()
+					+ "', PHONE = '" + m.getPhone()
+					+ "', ADDRESS = '" + m.getAddress()
+					+ "', HOBBY = '" + m.getAllHobby()
+					+ "' WHERE USERID = '" + m.getUserid() + "'"; // 문자형 비교이면 변수 앞뒤로 따옴표 붙여줘야 한다. 그리고 맨 마지막에 ;는 붙이지 않는다.
+			System.out.println(query);
+			result = stmt.executeUpdate(query); // SQL 실행하여 표 형식으로 반환			
+			if(result == 0){ // 0이라면 실패했다는 의미
+				conn.rollback(); // 롤백은 이렇게
+			}else{
+				conn.commit(); // 커밋은 이렇게
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// 열었던 것들을 닫아준다. 나중에 연 것부터 닫아준다.
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}		
+		return result;
+	}
+
+	public int deleteMember(String id) {
+		// TODO Auto-generated method stub
+		int result = 0;
+		
+		Connection conn = JDBCTemplate.getConnection(); // connection 생성
+		Statement stmt = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver"); // 실행할 jdbc 라이브러리 등록. 가끔씩 Build Path에서 인식을 못하는데, 이러면 lib에 넣어줘서 컴파일한다.
+			stmt = conn.createStatement();
+			String query = "DELETE FROM MEMBER WHERE USERID = '" + id + "'";
+			result = stmt.executeUpdate(query); // SQL 실행하여 표 형식으로 반환	
+			if(result == 0){ // 0이라면 실패했다는 의미
+				conn.rollback(); // 롤백은 이렇게
+			}else{
+				conn.commit(); // 커밋은 이렇게
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// 열었던 것들을 닫아준다. 나중에 연 것부터 닫아준다.
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}		
+		return result;
+	}
 }

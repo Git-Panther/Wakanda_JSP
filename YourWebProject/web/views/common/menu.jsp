@@ -38,8 +38,12 @@
 	}
 </style>
 <script>
-	function mainPage(){
+	function goHome(){
 		location.href = "/uwp/index.jsp";
+	}
+	
+	function myinfo(){
+		location.href = "/uwp/views/member/myinfo.jsp";
 	}
 </script>
 </head>
@@ -51,10 +55,13 @@
 	<br/>
 	<div class="wrap">
 		<div class="nav">
-			<div class="menu" onclick="mainPage();">Home</div>
+			<div class="menu" onclick="goHome();">Home</div>
 			<div class="menu">Notice</div>
 			<div class="menu">Gallery</div>
 			<div class="menu">Photo</div>
+			<%if(request.getSession().getAttribute("user") != null){%>
+			<div class="menu" onclick="myinfo();">Settings</div>
+			<%}%>
 		</div>		
 	</div>
 </body>

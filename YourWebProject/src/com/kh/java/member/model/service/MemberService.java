@@ -20,4 +20,14 @@ public class MemberService {
 		// TODO Auto-generated method stub
 		return new MemberDao().selectMemberById(id);
 	}
+
+	public int updateMember(MemberVo m) {
+		// TODO Auto-generated method stub
+		return new MemberDao().updateMember(m);
+	}
+
+	public int deleteMember(String id) {
+		// TODO Auto-generated method stub
+		return new MemberDao().deleteMember(id);
+	}
 }
